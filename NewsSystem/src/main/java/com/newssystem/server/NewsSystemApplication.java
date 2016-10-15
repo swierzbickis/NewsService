@@ -16,23 +16,23 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 public class NewsSystemApplication implements CommandLineRunner{
 
-    @Autowired
-    public NewsService newsService;
+	@Autowired
+	public NewsService newsService;
 
-    @Autowired
-    public CommentService commentService;
+	@Autowired
+	public CommentService commentService;
 
-    public static void main(String[] args) {
-        SpringApplication.run(NewsSystemApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(NewsSystemApplication.class, args);
+	}
 
-    @Override
-    public void run(String... args) throws Exception {
+	@Override
+	public void run(String... args) throws Exception {
 
-        News obj = new News(null,"Tytul","Tresc","23.12.2016");
-        newsService.create(obj);
+		News obj = new News("Tytul","Tresc","23.12.2016","Zenek");
+		newsService.create(obj);
 
-        Comment comment = new Comment("456786","Trescc","Autor","23.12.2016");
-        commentService.create(comment);
-    }
+		Comment comment = new Comment("456786","Trescc","Autor","23.12.2016");
+		commentService.create(comment);
+	}
 }

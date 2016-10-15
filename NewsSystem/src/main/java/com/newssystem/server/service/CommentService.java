@@ -2,6 +2,7 @@ package com.newssystem.server.service;
 
 import com.newssystem.server.domain.Comment;
 import com.newssystem.server.repository.CommentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static java.util.stream.Collectors.toList;
@@ -16,6 +17,9 @@ public class CommentService implements ServiceInterface<Comment>,CustomInterface
 
     public CommentRepository commentRepository;
 
+    public CommentService() {}
+
+    @Autowired
     public CommentService(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
     }

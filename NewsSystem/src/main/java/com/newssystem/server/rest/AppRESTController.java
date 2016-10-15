@@ -5,9 +5,15 @@ import com.newssystem.server.domain.News;
 import com.newssystem.server.service.CommentService;
 import com.newssystem.server.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 
 /**
  * Created by Sebek on 2016-10-08.
@@ -18,6 +24,8 @@ public class AppRESTController {
 
     private final CommentService commentService;
     private final NewsService newsService;
+    private final Map<String, Object> response = new LinkedHashMap<>();
+
 
     @Autowired
     public AppRESTController(CommentService commentService, NewsService newsService) {
@@ -40,20 +48,43 @@ public class AppRESTController {
     }
 
 
-    @RequestMapping(method = RequestMethod.POST , value = "/saveNews")
+    @RequestMapping(method = RequestMethod.POST, value = "/saveNews")
     public
     @ResponseBody
-    News create(@RequestBody News newsEntity){
-        return newsService.create(newsEntity);
+    Map<String, Object> create(@Valid @RequestBody News newsEntity, BindingResult bindingResult) {
+
+        if(checkError(bindingResult)){
+            newsService.create(newsEntity);
+            response.put("message", "News created successfully");
+        }
+
+        return response;
     }
 
-    @RequestMapping(method = RequestMethod.POST , value = "/saveComment")
+    @RequestMapping(method = RequestMethod.POST, value = "/saveComment")
     public
     @ResponseBody
-    Comment create(@RequestBody Comment commentEntity){
-        return commentService.create(commentEntity);
+    Map<String,Object> create(@Valid @RequestBody Comment commentEntity,BindingResult bindingResult) {
+
+
+        if(checkError(bindingResult)){
+            commentService.create(commentEntity);
+            response.put("message", "Comment created successfully");
+        }
+
+        return response;
     }
 
-
-
+    public Boolean checkError(BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            response.put("message", "Error");
+            for (FieldError error : errors) {
+                response.put(error.getField(), error.getDefaultMessage());
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

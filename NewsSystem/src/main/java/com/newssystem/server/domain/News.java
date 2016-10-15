@@ -22,13 +22,14 @@ public class News {
 
     public String data;
 
+
     @NotNull
     @Size(min=1,message = "Minimum 1 znak")
     public String author;
 
     public News() {}
 
-    public News(String id, String title, String text, String data,String author) {
+    public News(String title, String text, String data,String author) {
         this.title = title;
         this.text = text;
         this.data = data;

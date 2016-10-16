@@ -49,7 +49,8 @@ public class NewsService implements ServiceInterface<News>{
 
     @Override
     public News findById(String id) {
-        return null;
+        News news = newsRepository.findOne(id);
+        return news;
     }
 
     @Override

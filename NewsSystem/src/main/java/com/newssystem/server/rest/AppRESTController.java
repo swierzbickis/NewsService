@@ -33,6 +33,9 @@ public class AppRESTController {
         this.newsService = newsService;
     }
 
+
+
+    @CrossOrigin(value = "*")
     @RequestMapping(method = RequestMethod.GET, value = "/getNews")
     public
     @ResponseBody
@@ -48,6 +51,19 @@ public class AppRESTController {
     }
 
 
+    @CrossOrigin(value = "*")
+    @RequestMapping(method = RequestMethod.GET, value = "/getNewsById/{id}")
+    public @ResponseBody News findById(@PathVariable String id){
+        News news = newsService.findById(id);
+        return news;
+    }
+
+    @CrossOrigin(value = "*")
+    @RequestMapping(method = RequestMethod.GET, value = "/getCommentsByNewsId/{id}")
+    public @ResponseBody List<Comment> findByNewsId(@PathVariable String id){
+        return commentService.findByNewsId(id);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/saveNews")
     public
     @ResponseBody
@@ -60,12 +76,11 @@ public class AppRESTController {
 
         return response;
     }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/saveComment")
+    @CrossOrigin(value = "*")
+    @RequestMapping(method = RequestMethod.POST, value = "/getCommentsByNewsId/{id}")
     public
     @ResponseBody
-    Map<String,Object> create(@Valid @RequestBody Comment commentEntity,BindingResult bindingResult) {
-
+    Map<String,Object> create(@Valid @RequestBody Comment commentEntity,BindingResult bindingResult,@PathVariable String id) {
 
         if(checkError(bindingResult)){
             commentService.create(commentEntity);

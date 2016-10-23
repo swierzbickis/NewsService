@@ -64,7 +64,8 @@ public class AppRESTController {
         return commentService.findByNewsId(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/saveNews")
+    @CrossOrigin(value = "*")
+    @RequestMapping(method = RequestMethod.POST, value = "/getNews")
     public
     @ResponseBody
     Map<String, Object> create(@Valid @RequestBody News newsEntity, BindingResult bindingResult) {

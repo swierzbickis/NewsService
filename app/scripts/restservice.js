@@ -3,8 +3,10 @@
 var path = ''
 
 angular.module('RESTService', [])
-  .controller('NewsController', function (NewsModel) {
+  .controller('NewsController', function ($scope, NewsModel) {
     var newsdashboard = this;
+    var comm = this;
+    var data = new Date().toLocaleString();
 
     function getNews() {
       path = '/getNews/'
@@ -17,6 +19,33 @@ angular.module('RESTService', [])
     newsdashboard.news = [];
     getNews();
 
+    function createNews(news) {
+      NewsModel.create(angular.extend({},
+        {data: data}, news)).then(function (result) {
+        initCreateForm();
+        newsdashboard.news = result.data;
+
+        $scope.showData = true;
+        $scope.resultMessage = result.data;
+        console.log("Info" + newsdashboard.news.message);
+
+        if (newsdashboard.news.message == "Error") {
+          $scope.showData = true;
+        } else {
+          $scope.showData = false;
+          $scope.showOk = true;
+        }
+
+      })
+
+    }
+
+    function initCreateForm() {
+      comm.newComm = {comment: '', author: ''};
+    }
+
+    newsdashboard.createNews = createNews;
+
   }).controller('CommentController', function ($scope, $routeParams, NewsModel) {
 
   var newsId = $routeParams.id;
@@ -26,17 +55,26 @@ angular.module('RESTService', [])
 
   var data = new Date().toLocaleString();
 
+  //Tworzenie komentarza
   $scope.createComm = function (comment) {
     NewsModel.createComment(angular.extend({},
-      {data: data, newsId : newsId},comment)).then(function(result){
-
+      {data: data, newsId: newsId}, comment)).then(function (result) {
       initCreateComm();
-
+      $scope.getComments();
     })
   }
 
-  function initCreateComm(){
-    comm.newComm = {comment : '', author : ''};
+  //Pobierze dane na bieżąco i je wyświetli jak w ajaxie ( Two way binding )
+  $scope.getComments = function(){
+    NewsModel.getCommentById().then(function(result){
+      $scope.comments = result.data;
+      console.log($scope.comments);
+    });
+  };
+  $scope.getComments();
+
+  function initCreateComm() {
+    comm.newComm = {comment: '', author: ''};
   }
 
   NewsModel.getCommentById().then(function (result) {
@@ -85,8 +123,8 @@ angular.module('RESTService', [])
       return $http.get(getUrl());
     }
 
-    service.createComment = function(comment){
-      return $http.post(getUrl(),comment);
+    service.createComment = function (comment) {
+      return $http.post(getUrl(), comment);
     }
 
   });

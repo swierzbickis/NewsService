@@ -61,7 +61,7 @@ public class CommentService implements ServiceInterface<Comment>,CustomInterface
 
     @Override
     public List<Comment> findByNewsId(String id) {
-        List<Comment> commentList = commentRepository.findByNewsId(id);
+        List<Comment> commentList = commentRepository.findAllByNewsIdOrderByDataDesc(id);
         return convertToDTOs(commentList);
     }
 }
